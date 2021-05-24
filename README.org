@@ -1,0 +1,43 @@
+* Daft
+** Summary
+
+This is a "minimal" test case that, to some extent, mimics the behavior of
+Deft in order to highlight the difference in behavior between the functions
+~widget-button-click~ and ~widget-button-press~.
+
+** Installation
+
+This package can be cloned from GitHub via the following command:
+
+#+begin_src bash
+git clone https://github.com/shankar2k/daft.git
+#+end_src
+
+Then make sure that Emacs can find it by first adding the following line to
+your startup file:
+
+#+begin_src emacs-lisp
+(add-to-list 'load-path "/path/to/daft/repository")
+#+end_src
+
+and then loading Daft using:
+
+#+begin_src emacs-lisp
+(require 'daft)
+#+end_src
+
+** Usage
+
+After installing Daft, you can simply run ~M-x daft~ to start Daft. It will
+list all of the text files (i.e., files with extension ~.txt~) in the daft
+repository directory as widgets. One can open any of the files by either
+hitting ~[RET]~ when the point is on the file's widget, or by clicking on the
+widget with the mouse. However the behaviors for these two options are
+different:
+
+- If the file is opened by hitting ~[RET]~ (invoking ~widget-button-press~), the
+  file is opened in the side window below and the file's window now has focus.
+  This is the desired behavior.
+- If the file is opened by clicking with the mouse (invoking
+  ~widget-button-click~), the file is opened in the side window below, but the
+  focus remains with the Daft buffer. This is *not* the desired behavior.
