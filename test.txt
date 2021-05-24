@@ -1,0 +1,15 @@
+this is a test of the emergency broadcast system
+this is *only* a test
+ - can do lists
+ - yeah baby
+   - and can i indent?
+   - apparently yes
+   + what list icons can i use?
+   * how about this? @done
+   * 
+
+1. can i do numbered lists?
+2. now?
+
+nope
+

@@ -1,0 +1,32 @@
+* Deft Preview Commands Left to Right [20/31]
+- [ ] ^O        deft-open-file-other-window
+- [ ] <down-mouse-1>    widget-button-click
+- [ ] <down-mouse-2>    widget-button-click
+- [ ] ^C ^A     deft-archive-file
+- [ ] ^C ^D     deft-delete-file
+- [ ] ^C ^F     deft-find-file
+- [ ] ^C ^G     deft-refresh
+- [ ] ^C RET        deft-new-file-named
+- [ ] ^C ^Q     quit-window
+- [ ] ^C ^R     deft-rename-file
+- [ ] ^C ^T     deft-toggle-incremental-search
+- [X] ^C ^N     deft-new-file
+- [X] ^C ^C     deft-filter-clear
+- [X] ^C ^S     deft-toggle-sort-method
+- [X] ^Y        deft-filter-yank
+- [X] ^C ^L     deft-filter
+- [X] ⌥•‚å´     deft-filter-decrement-word
+- [X] <C-return>    deft-new-file-named (that binding is currently shadowed by another mode)
+- [X] ‚å´       deft-filter-decrement
+- [X]  ESC      Prefix Command
+- [X] ^C        Prefix Command
+- [X] <S-Return>    deft-complete
+- [X] \200 .. \377  deft-filter-increment
+- [X] ¬Ä .. ¯èøΩø   deft-filter-increment
+- [X] SPC .. ~  deft-filter-increment
+- [X]  RET      deft-preview-complete
+- [X] <S-tab>       widget-backward
+- [X] <backtab> widget-backward
+- [X] <tab>     widget-forward
+- [X] <up>      deft-preview-up
+- [X] <down>        deft-preview-down
