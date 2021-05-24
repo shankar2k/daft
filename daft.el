@@ -15,8 +15,6 @@
 ;; Deft to show the difference in behavior between the functions
 ;; `widget-button-click' and `widget-button-press'.
 ;;
-;; See documentation on https://github.com/shankar2k/daft.
-
 ;;; License:
 
 ;; This program is free software; you can redistribute it and/or modify
