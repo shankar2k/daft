@@ -1,19 +1,19 @@
-;;; daft.el --- "Minimal" example of difference in behavior between widget-button-click and widget-button-press 
+;;; daft.el --- "Minimal" example of difference in behavior between widgets and buttons 
 
 ;; Copyright (C) 2021 Shankar Rao
 
 ;; Author: Shankar Rao <shankar.rao@gmail.com>
 ;; URL: https://github.com/~shankar2k/daft
-;; Version: 0.1
-;; Keywords: widget, deft
+;; Version: 0.2
+;; Keywords: widget, button, deft
 
 ;; This file is not part of GNU Emacs.
 
 ;;; Commentary:
 
 ;; This is a "minimal" test case that, to some extent, mimics the behavior of
-;; Deft to show the difference in behavior between the functions
-;; `widget-button-click' and `widget-button-press'.
+;; Deft to highlight the difference in mouse click behavior between widgets
+;; and buttons.
 ;;
 ;;; License:
 
@@ -31,6 +31,10 @@
 ;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ;;; History:
+
+;; Version 0.2 (2021-05-25):
+
+;; - Added test functions for comparing behavior of widgets and buttons 
 
 ;; Version 0.1 (2021-05-23):
 
@@ -52,10 +56,12 @@
 
 ;; After installing Daft, you can simply run `M-x daft` to start Daft. It will
 ;; list all of the text files (i.e., files with extension `.txt`) in the daft
-;; repository directory as widgets. One can open any of the files by either
-;; hitting [RET] when the point is on the file's widget, or by clicking on the
-;; widget with the mouse. However the behaviors for these two options are
-;; different:
+;; repository directory as widgets/buttons. One can open any of the files by
+;; either hitting [RET] when the point is on the file's widget/button, or by
+;; clicking on the widget/button with the mouse. If ``daft-use-buttons?'' is
+;; set to ``t'', then either method for opening the file will operate the same
+;; way. However if ``daft-use-buttons'' is ``nil'', then the behaviors for
+;; these two options are different:
 
 ;;   - If the file is opened by hitting [RET] (invoking
 ;;     `widget-button-press'), the file is opened in the side window below and
@@ -66,8 +72,19 @@
 ;;     but the focus remains with the Daft buffer. This is not the desired
 ;;     behavior.
 
+;; One can use the test functions ``test-daft-button'' and
+;; ``test-daft-widget'' to test and compare the functionality of Daft using
+;; widgets and buttons, respectively. These functions set ``daft-use-button?''
+;; to either t or nil, kill the daft-buffer if it exists, and then run
+;; ``daft''.
+
 ;;; Code:
 
+;;;; Requirements:
+
+(require 'button)
+
+;;;; Variables
 
 (defconst daft-buffer "*Daft*")
 
@@ -75,14 +92,43 @@
 
 (defvar daft-open-file-hook nil)
 
+(defvar daft-use-button? t)
+
+(defvar daft-buffer-alist '((display-buffer-reuse-window
+                             display-buffer-in-side-window)                            
+                            (side            . bottom)
+                            (window-height . 0.5)))
+
+(defvar daft-open-in-side-window? t)
+
+;;;; Functions
+
 (defun daft-buffer-setup ()
-  (let ((inhibit-read-only t))
-    (erase-buffer))
-  (widget-insert "Daft\n\n")
-  (mapc 'daft-file-widget daft-all-files)
-  (widget-setup)
+  (let ((inhibit-read-only t)
+        (daft-file (if daft-use-button?
+                       'daft-file-button
+                     'daft-file-widget)))
+    (erase-buffer)
+    (insert "Daft\n\n")
+    (mapc daft-file daft-all-files))
+  (unless daft-use-button?
+    (widget-setup))
   (goto-char (point-min))
   (forward-line 2))
+
+(defun daft-button-open (button)
+  (daft-open-file (button-get button 'tag)))
+
+(define-button-type 'daft-button
+  'action 'daft-button-open
+  'follow-link t
+  'help-echo "Edit this file")
+
+(defun daft-file-button (file)
+  (when file
+    (let ((title (file-name-sans-extension (file-name-nondirectory file))))
+      (insert-text-button title 'type 'daft-button 'tag file)
+      (insert "\n"))))
 
 (defun daft-file-widget (file)
   (when file
@@ -90,6 +136,7 @@
       (widget-create 'link
                      :format "%[%v%]"
                      :tag file
+                     :help-echo "Edit this file"
                      :notify (lambda (widget &rest ignore)
                                (daft-open-file (widget-get widget :tag)))
                      title)
@@ -119,18 +166,32 @@
 
 
 ;; "extension" for opening files in a side window
-
-(defvar daft-buffer-alist '((display-buffer-reuse-window
-                             display-buffer-in-side-window)                            
-                            (side            . bottom)
-                            (window-height . 0.5)))
-
-(defvar daft-open-in-side-window? t)
-
 (defun daft-open-file-side ()
   (when daft-open-in-side-window?
     (pop-to-buffer (get-file-buffer file) daft-buffer-alist)))
 
+
+(defun test-daft-widget ()
+  (interactive)
+  (setq daft-use-button? nil)
+  (let ((buffer (get-buffer daft-buffer)))
+    (when buffer
+      (kill-buffer buffer)))
+  (daft))
+
+(defun test-daft-button ()
+  (interactive)
+  (setq daft-use-button? t)
+  (let ((buffer (get-buffer daft-buffer)))
+    (when buffer
+      (kill-buffer buffer)))
+  (daft))        
+
+
 (add-hook 'daft-open-file-hook 'daft-open-file-side)
 
+;;;; Footer
+
 (provide 'daft)
+
+;;; daft.el ends here
